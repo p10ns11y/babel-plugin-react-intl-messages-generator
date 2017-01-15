@@ -10,19 +10,19 @@ import { sync as mkdirpSync } from 'mkdirp';
 
 const EXTRACTED_TAG = Symbol('DescriptorGenerated');
 
-export default function ({types: t}) {
+export default function ({types: t}) { // eslint-disable-line no-unused-vars
 
   function generateText(defaultMessage, path, state) {
     const { file, reactIntlMessagesGenerator } = state;
 
     if (!defaultMessage.trim()) return;
-
+    console.log(path.node.parent);
     const pseudoId = p.relative(
       process.cwd(),
       file.opts.filename
     ).split('/')
      .join('.')
-     .replace(/jsx|js/, '..');
+     .replace(/jsx?/, '..');
 
     const generatedDescriptor = { id: pseudoId, defaultMessage: defaultMessage.trim() };
     reactIntlMessagesGenerator.generatedTexts.push(generatedDescriptor);
@@ -57,11 +57,19 @@ export default function ({types: t}) {
             let generatedMessagesFilename = p.join(opts.messagesDir, p.dirname(relativePath), basename + 'Messages.js' );
 
             let namedDesriptors = generatedDescriptors.reduce((descriptorsWithKey, descriptor) => {
-              descriptorsWithKey += `  NameTheKey: ${JSON.stringify(descriptor, null, 4).replace('}', '  }')},\n`;
+              const lintFixedDescriptor = JSON.stringify(
+                descriptor, null, 4
+              )
+              .replace('}', '  }')
+              .replace('\"id\"', 'id')
+              .replace('\"defaultMessage\"', 'defaultMessage')
+              .replace(/\"/g, '\'');
+
+              descriptorsWithKey += `  NameTheKey: ${lintFixedDescriptor},\n`;
               return descriptorsWithKey;
             }, '');
 
-            let generatedDescriptorFile = `import { defineMessages } from 'react-intl'\n\nexport default defineMessages({\n${namedDesriptors}})`;
+            let generatedDescriptorFile = `import { defineMessages } from 'react-intl';\n\nexport default defineMessages({\n${namedDesriptors}});`;
             mkdirpSync(p.dirname(generatedMessagesFilename));
             writeFileSync(generatedMessagesFilename, generatedDescriptorFile);
           }

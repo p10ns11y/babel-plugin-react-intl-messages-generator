@@ -30,11 +30,21 @@ fixtures.forEach((fixture) => {
 
   let generatedDescriptors = metadata['react-intl-generator'].generatedTexts;
   let namedDescriptors = generatedDescriptors.reduce((descriptorsWithKey, descriptor) => {
-    descriptorsWithKey += `  NameTheKey: ${JSON.stringify(descriptor, null, 4).replace('}', '  }')},\n`;
+    const lintFixedDescriptor = JSON.stringify(
+      descriptor, null, 4
+    )
+    .replace('}', '  }')
+    .replace('\"id\"', 'id')
+    .replace('\"defaultMessage\"', 'defaultMessage')
+    .replace(/\"/g, '\'');
+
+    descriptorsWithKey += `  NameTheKey: ${lintFixedDescriptor},\n`;
     return descriptorsWithKey;
   }, '');
 
-  let generatedDescriptorFile = `import { defineMessages } from 'react-intl'\n\nexport default defineMessages({\n${namedDescriptors}})`;
+  //replace('\"a\"', 'a').replace(/\"/g, '\'')
+
+  let generatedDescriptorFile = `import { defineMessages } from 'react-intl';\n\nexport default defineMessages({\n${namedDescriptors}});`;
 
   fs.writeFileSync(`${baseDir}/${name}/expected.js`, `${code}\n`);
   fs.writeFileSync(`${baseDir}/${name}/expectedMessages.js`, `${generatedDescriptorFile}\n`);
