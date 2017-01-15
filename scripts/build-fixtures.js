@@ -8,6 +8,7 @@ const baseDir = p.resolve(`${__dirname}/../test/fixtures`);
 /* TODO: Support extractSourceLocation option */
 const fixtures = [
   'componentMessages',
+  'statelessComponentMessages',
 ];
 
 fixtures.forEach((fixture) => {
@@ -28,7 +29,7 @@ fixtures.forEach((fixture) => {
     ],
   });
 
-  let generatedDescriptors = metadata['react-intl-defineMessages'].generatedTexts;
+  let generatedDescriptors = metadata['react-intl-defineMessages'].generatedDescriptors;
   let namedDescriptors = generatedDescriptors.reduce((descriptorsWithKey, descriptor) => {
     const lintFixedDescriptor = JSON.stringify(
       descriptor, null, 4
