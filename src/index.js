@@ -12,20 +12,22 @@ const EXTRACTED_TAG = Symbol('DescriptorGenerated');
 
 export default function ({types: t}) { // eslint-disable-line no-unused-vars
 
-  function generateText(defaultMessage, path, state) {
-    const { file, reactIntlMessagesGenerator } = state;
+  function generateDescriptorFromText(defaultMessage, path, state) {
+    const { file, reactIntlMessages } = state;
 
     if (!defaultMessage.trim()) return;
-    console.log(path.node.parent);
-    const pseudoId = p.relative(
+
+    const prefixId = p.relative(
       process.cwd(),
       file.opts.filename
     ).split('/')
      .join('.')
      .replace(/jsx?/, '..');
 
-    const generatedDescriptor = { id: pseudoId, defaultMessage: defaultMessage.trim() };
-    reactIntlMessagesGenerator.generatedTexts.push(generatedDescriptor);
+    defaultMessage = defaultMessage.trim();
+
+    const generatedDescriptor = { id: prefixId, defaultMessage };
+    reactIntlMessages.generatedDescriptors.push(generatedDescriptor);
   }
 
   function tagAsExtracted(path) {
@@ -40,17 +42,17 @@ export default function ({types: t}) { // eslint-disable-line no-unused-vars
     visitor: {
       Program: {
         enter(path, state) {
-          state.reactIntlMessagesGenerator = {
-            generatedTexts: [],
+          state.reactIntlMessages = {
+            generatedDescriptors: [],
           };
         },
 
         exit(path, state) {
-          const { file, opts, reactIntlMessagesGenerator } = state;
+          const { file, opts, reactIntlMessages } = state;
           const {basename, filename}    = file.opts;
 
-          let generatedDescriptors = reactIntlMessagesGenerator.generatedTexts;
-          file.metadata['react-intl-generator'] = { generatedTexts: generatedDescriptors };
+          let generatedDescriptors = reactIntlMessages.generatedDescriptors;
+          file.metadata['react-intl-defineMessages'] = { generatedDescriptors };
 
           if (opts.messagesDir && generatedDescriptors.length > 0) {
             let relativePath = p.join(p.sep, p.relative(process.cwd(), filename));
@@ -80,7 +82,7 @@ export default function ({types: t}) { // eslint-disable-line no-unused-vars
         if (wasExtracted(path)) {
           return;
         }
-        generateText(path.node.value, path, state);
+        generateDescriptorFromText(path.node.value, path, state);
 
         // Tag the AST node so we don't try to extract it twice.
         tagAsExtracted(path);

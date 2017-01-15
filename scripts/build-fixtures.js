@@ -28,7 +28,7 @@ fixtures.forEach((fixture) => {
     ],
   });
 
-  let generatedDescriptors = metadata['react-intl-generator'].generatedTexts;
+  let generatedDescriptors = metadata['react-intl-defineMessages'].generatedTexts;
   let namedDescriptors = generatedDescriptors.reduce((descriptorsWithKey, descriptor) => {
     const lintFixedDescriptor = JSON.stringify(
       descriptor, null, 4
@@ -41,8 +41,6 @@ fixtures.forEach((fixture) => {
     descriptorsWithKey += `  NameTheKey: ${lintFixedDescriptor},\n`;
     return descriptorsWithKey;
   }, '');
-
-  //replace('\"a\"', 'a').replace(/\"/g, '\'')
 
   let generatedDescriptorFile = `import { defineMessages } from 'react-intl';\n\nexport default defineMessages({\n${namedDescriptors}});`;
 
