@@ -61,6 +61,9 @@ export default defineMessages({
 }
 ```
 
+Even better use the root directory so it will place the messages file
+where the component exists. So they files are co-located 
+
 #### Options
 
 - **`messagesDir`**: The target location where the plugin will output a `.js` file corresponding to each component from which messages were extracted. If not provided, the extracted message descriptors will only be accessible via Babel's API.
@@ -74,10 +77,10 @@ $ babel --plugins react-intl-messages-generator script.js
 
 ### Via Node API
 
-The extract message descriptors are available via the `metadata` property on the object returned from Babel's `transform()` API:
+The explicit texts converted as descriptors are available via the `metadata` property on the object returned from Babel's `transform()` API:
 
 ```javascript
 require('babel-core').transform('code', {
   plugins: ['react-intl-messages-generator']
-}) // => { code, map, ast, metadata['react-intl-defineMessages'].messages };
+}) // => { code, map, ast, metadata['react-intl-defineMessages'].generatedDescriptors };
 ```
