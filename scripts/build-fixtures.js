@@ -9,6 +9,8 @@ const baseDir = p.resolve(`${__dirname}/../test/fixtures`);
 const fixtures = [
   'componentMessages',
   'statelessComponentMessages',
+  'duplicateMessages',
+  'skipNumberMessages',
 ];
 
 fixtures.forEach((fixture) => {

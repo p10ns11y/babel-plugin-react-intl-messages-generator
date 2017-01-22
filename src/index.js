@@ -12,10 +12,20 @@ const EXTRACTED_TAG = Symbol('DescriptorGenerated');
 
 export default function ({types: t}) { // eslint-disable-line no-unused-vars
 
-  function generateDescriptorFromText(defaultMessage, path, state) {
-    const { file, reactIntlMessages } = state;
+  function isTextIgnorable(text) {
+    const hasWords = /^\w+/.test(text); // covers empty string
+    const isNumber = /^\d+$/.test(text);
+    return (text.length === 1 || isNumber || !hasWords );
+  }
 
-    if (!defaultMessage.trim()) return;
+  function generateDescriptorFromText(defaultMessage, path, state) {
+    const { file, reactIntlMessages : { generatedDescriptors, proxyTexts } } = state;
+
+    defaultMessage = defaultMessage.trim();
+
+    if (isTextIgnorable(defaultMessage) || proxyTexts.has(defaultMessage)) return;
+
+    proxyTexts.add(defaultMessage);
 
     const prefixId = p.relative(
       process.cwd(),
@@ -24,10 +34,7 @@ export default function ({types: t}) { // eslint-disable-line no-unused-vars
      .join('.')
      .replace(/jsx?/, '..');
 
-    defaultMessage = defaultMessage.trim();
-
-    const generatedDescriptor = { id: prefixId, defaultMessage };
-    reactIntlMessages.generatedDescriptors.push(generatedDescriptor);
+    generatedDescriptors.push({ id: prefixId, defaultMessage });
   }
 
   function tagAsExtracted(path) {
@@ -44,6 +51,7 @@ export default function ({types: t}) { // eslint-disable-line no-unused-vars
         enter(path, state) {
           state.reactIntlMessages = {
             generatedDescriptors: [],
+            proxyTexts: new Set(),
           };
         },
 
@@ -82,6 +90,7 @@ export default function ({types: t}) { // eslint-disable-line no-unused-vars
         if (wasExtracted(path)) {
           return;
         }
+
         generateDescriptorFromText(path.node.value, path, state);
 
         // Tag the AST node so we don't try to extract it twice.
