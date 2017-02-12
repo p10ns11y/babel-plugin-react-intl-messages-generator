@@ -5,7 +5,7 @@
  */
 
 import * as p from 'path';
-import { writeFileSync } from 'fs';
+import { writeFileSync, existsSync, readFileSync } from 'fs';
 import { sync as mkdirpSync } from 'mkdirp';
 
 const EXTRACTED_TAG = Symbol('DescriptorGenerated');
@@ -64,9 +64,20 @@ export default function ({types: t}) { // eslint-disable-line no-unused-vars
 
           if (opts.messagesDir && generatedDescriptors.length > 0) {
             let relativePath = p.join(p.sep, p.relative(process.cwd(), filename));
-            let generatedMessagesFilename = p.join(opts.messagesDir, p.dirname(relativePath), basename + 'Messages.js' );
+            let generatedMessagesFilename = p.join(
+              opts.messagesDir, p.dirname(relativePath), basename + 'Messages.js'
+            );
+
+            let existingContent;
+            if (existsSync(generatedMessagesFilename)) {
+              existingContent = readFileSync(generatedMessagesFilename, 'utf-8');
+            }
 
             let namedDesriptors = generatedDescriptors.reduce((descriptorsWithKey, descriptor) => {
+              if (existingContent && existingContent.indexOf(descriptor.defaultMessage) > -1) {
+                return descriptorsWithKey;
+              }
+
               const lintFixedDescriptor = JSON.stringify(
                 descriptor, null, 4
               )
@@ -79,9 +90,23 @@ export default function ({types: t}) { // eslint-disable-line no-unused-vars
               return descriptorsWithKey;
             }, '');
 
-            let generatedDescriptorFile = `import { defineMessages } from 'react-intl';\n\nexport default defineMessages({\n${namedDesriptors}});`;
             mkdirpSync(p.dirname(generatedMessagesFilename));
-            writeFileSync(generatedMessagesFilename, generatedDescriptorFile);
+            let generatedDescriptorFile = `import { defineMessages } from 'react-intl';\n\nexport default defineMessages({\n${namedDesriptors}});\n`;
+
+            if (existingContent && namedDesriptors) { // updating existing file
+              let parsedDescriptors = existingContent
+                .replace(`import { defineMessages } from 'react-intl';\n\nexport default defineMessages({\n`, '')
+                .replace('\n});', '');
+              console.log(parsedDescriptors);
+
+              let updatedNamedDescriptors = parsedDescriptors + namedDesriptors;
+              generatedDescriptorFile = `import { defineMessages } from 'react-intl';\n\nexport default defineMessages({\n${updatedNamedDescriptors}});\n`;
+              writeFileSync(generatedMessagesFilename, generatedDescriptorFile);
+            }
+
+            if(!existingContent && namedDesriptors) { // new file
+              writeFileSync(generatedMessagesFilename, generatedDescriptorFile);
+            } // else keep the file untouched
           }
         },
       },

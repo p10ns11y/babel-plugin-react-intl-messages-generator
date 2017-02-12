@@ -25,10 +25,15 @@ describe('emit asserts for: ', () => {
       const fixtureDir = path.join(fixturesDir, caseName);
 
       // Ensure messages are deleted
-      const actualGeneratedMessagesPath = path.join(fixtureDir, 'actualMessages.js');
-      if (fs.existsSync(actualGeneratedMessagesPath)) fs.unlinkSync(actualGeneratedMessagesPath);
+      // const actualGeneratedMessagesPath = path.join(fixtureDir, 'actualMessages.js');
+      // if (fs.existsSync(actualGeneratedMessagesPath)) fs.unlinkSync(actualGeneratedMessagesPath);
+      let isUpdated = false;
+      if (caseName === 'componentWithNewMessages') isUpdated = true;
 
-      const actual = transform(path.join(fixtureDir, 'actual.js'));
+      const actualFileName = isUpdated ? 'actualWithNew' : 'actual';
+      const actualFile = actualFileName + '.js';
+
+      const actual = transform(path.join(fixtureDir, actualFile));
 
       // Check code output
       const expected = fs.readFileSync(path.join(fixtureDir, 'expected.js'));
@@ -36,7 +41,7 @@ describe('emit asserts for: ', () => {
 
       // Check generated message output
       const expectedGenMessages = fs.readFileSync(path.join(fixtureDir, 'expectedMessages.js'));
-      const actualGenMessages = fs.readFileSync(path.join(fixtureDir, 'actualMessages.js'));
+      const actualGenMessages = fs.readFileSync(path.join(fixtureDir, actualFileName + 'Messages.js'));
       assert.equal(trim(actualGenMessages), trim(expectedGenMessages));
     });
   });
