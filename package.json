@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-react-intl-messages-generator",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Extracts explicit texts from react components and generate a componentNameMessages.js files",
   "repository": {
     "type": "git",
