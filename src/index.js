@@ -97,7 +97,6 @@ export default function ({types: t}) { // eslint-disable-line no-unused-vars
               let parsedDescriptors = existingContent
                 .replace(`import { defineMessages } from 'react-intl';\n\nexport default defineMessages({\n`, '')
                 .replace('\n});', '');
-              console.log(parsedDescriptors);
 
               let updatedNamedDescriptors = parsedDescriptors + namedDesriptors;
               generatedDescriptorFile = `import { defineMessages } from 'react-intl';\n\nexport default defineMessages({\n${updatedNamedDescriptors}});\n`;
