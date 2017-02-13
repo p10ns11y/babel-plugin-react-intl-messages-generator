@@ -5,7 +5,19 @@ import plugin from '../src/index';
 
 const baseDir = p.resolve(`${__dirname}/../test/fixtures`);
 
-function generateFiles(metadata, name, code) {
+function generateFiles(metadata, name, code, edited = false) {
+
+  if (edited) {
+    const file = `${baseDir}/${name}/actualWithNewdMessages.js`;
+    let existingContent;
+    if (fs.existsSync(file)) {
+      existingContent = fs.readFileSync(
+        file,
+        'utf-8'
+      );
+    }
+  }
+
   let generatedDescriptors = metadata['react-intl-defineMessages'].generatedDescriptors;
   let namedDescriptors = generatedDescriptors.reduce((descriptorsWithKey, descriptor) => {
     const lintFixedDescriptor = JSON.stringify(
@@ -58,6 +70,7 @@ fixtures.forEach((fixture) => {
 
 
 // component updated after extraction
+// TODO: use the existing file and use edited actualMessages file
 let {code, metadata} = transformFileSync(`${baseDir}/componentWithNewMessages/actualWithNew.js`, {
   plugins: [
     [plugin, {
@@ -66,4 +79,4 @@ let {code, metadata} = transformFileSync(`${baseDir}/componentWithNewMessages/ac
   ],
 });
 
-generateFiles(metadata, 'componentWithNewMessages', code);
+generateFiles(metadata, 'componentWithNewMessages', code, true);
