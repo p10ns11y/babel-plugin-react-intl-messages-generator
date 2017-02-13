@@ -11,7 +11,7 @@ import { sync as mkdirpSync } from 'mkdirp';
 import {
   createDescriptorsWithKey,
   defineMessageFormat,
-  removeDefindeMessageFormat
+  removeDefindeMessageFormat,
 } from './utils';
 
 const EXTRACTED_TAG = Symbol('DescriptorGenerated');
@@ -27,7 +27,7 @@ export default function({ types: t }) { // eslint-disable-line no-unused-vars
   function generateDescriptorFromText(defaultMessage, path, state) {
     const {
       file,
-      reactIntlMessages: { generatedDescriptors, proxyTexts }
+      reactIntlMessages: { generatedDescriptors, proxyTexts },
     } = state;
 
     defaultMessage = defaultMessage.trim();
@@ -60,9 +60,10 @@ export default function({ types: t }) { // eslint-disable-line no-unused-vars
         enter(path, state) {
           state.reactIntlMessages = {
             generatedDescriptors: [],
-            proxyTexts: new Set()
+            proxyTexts: new Set(),
           };
         },
+
         exit(path, state) {
           const { file, opts, reactIntlMessages } = state;
           const { basename, filename } = file.opts;
@@ -75,6 +76,7 @@ export default function({ types: t }) { // eslint-disable-line no-unused-vars
               p.sep,
               p.relative(process.cwd(), filename)
             );
+
             let generatedMessagesFilename = p.join(
               opts.messagesDir,
               p.dirname(relativePath),
@@ -103,7 +105,6 @@ export default function({ types: t }) { // eslint-disable-line no-unused-vars
                   }
                 }
 
-                //descriptorsWithKey += `  NameTheKey: ${lintFixedDescriptor},\n`;
                 descriptorsWithKey += createDescriptorsWithKey(descriptor);
                 return descriptorsWithKey;
               },
@@ -111,29 +112,29 @@ export default function({ types: t }) { // eslint-disable-line no-unused-vars
             );
 
             mkdirpSync(p.dirname(generatedMessagesFilename));
-            // let generatedDescriptorFile = defineMessageFormat(namedDesriptors);
-            //`import { defineMessages } from 'react-intl';\n\nexport default defineMessages({\n${namedDesriptors}});\n`;
+
             // updating existing file
             if (existingContent && namedDesriptors) {
               let oldDescriptors = removeDefindeMessageFormat(existingContent);
-
 
               let updatedNamedDescriptors = oldDescriptors + namedDesriptors;
               let updatedDescriptorFile = defineMessageFormat(
                 updatedNamedDescriptors
               );
-              //`import { defineMessages } from 'react-intl';\n\nexport default defineMessages({\n${updatedNamedDescriptors}});\n`;
+
               writeFileSync(generatedMessagesFilename, updatedDescriptorFile);
             }
 
+            // new file
             if (!existingContent && namedDesriptors) {
-              // new file
               let generatedDescriptorFile = defineMessageFormat(namedDesriptors);
               writeFileSync(generatedMessagesFilename, generatedDescriptorFile);
-            } // else keep the file untouched
+            }
+            // else keep the file untouched
           }
-        }
-      },
+        }, // exit ends
+      }, // Program ends
+
       JSXText(path, state) {
         if (wasExtracted(path)) {
           return;
@@ -143,7 +144,8 @@ export default function({ types: t }) { // eslint-disable-line no-unused-vars
 
         // Tag the AST node so we don't try to extract it twice.
         tagAsExtracted(path);
-      }
-    }
+      },
+
+    }, // visitor ends
   };
 }
