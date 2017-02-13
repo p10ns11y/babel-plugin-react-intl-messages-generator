@@ -61,8 +61,10 @@ export default defineMessages({
 }
 ```
 
-Even better use the root directory so it will place the messages file
-where the component exists. So they files are co-located 
+(Confidently Recommended 😏)
+
+Even better use the root directory [`"messagesDir": "./"`] so it will place the messages file where the component exists. So they files are co-located. No worries if you have edited the file already.
+Only new unique `defaultMessage` appended as `descriptor` at the end of previous list of `descriptors`
 
 #### Options
 
