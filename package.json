@@ -1,6 +1,6 @@
 {
   "name": "@loopmode/babel-plugin-react-intl-messages-generator",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Extracts explicit texts from react components and generate a componentNameMessages.js files. Forked from https://github.com/p10ns11y/babel-plugin-react-intl-messages-generator, added Windows compatibility",
   "repository": {
     "type": "git",
@@ -34,7 +34,7 @@
   },
   "scripts": {
     "lint": "eslint src/",
-    "clean": "rimraf lib/",
+    "clean": "rimraf lib/ && rimraf test/fixtures/*/actualMessages.js",
     "test": "cross-env NODE_ENV=test mocha --compilers js:babel-register",
     "build": "babel src/ --out-dir lib/",
     "build:fixtures": "babel-node ./scripts/build-fixtures.js",

@@ -106,7 +106,7 @@ export default function({ types: t }) { // eslint-disable-line no-unused-vars
                   }
                 }
 
-                descriptorsWithKey += createDescriptorsWithKey(descriptor);
+                descriptorsWithKey += createDescriptorsWithKey(descriptor, opts);
                 return descriptorsWithKey;
               },
               ''

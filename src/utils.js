@@ -13,13 +13,13 @@ export const removeDefindeMessageFormat = (fileContent) =>
   .replace(`export default defineMessages({\n`, '')
   .replace('\n});', '');
 
-export const createDescriptorsWithKey = (descriptor) => {
+export const createDescriptorsWithKey = (descriptor, {intendation = '  '}) => {
   const lintFixedDescriptor = JSON.stringify(descriptor, null, 4)
-    .replace('}', '  }')
+    .replace('}', `${intendation}}`)
     .replace('"id"', 'id')
     .replace('"defaultMessage"', 'defaultMessage')
     .replace(/\"/g, "'");
 
-  const descriptorsWithKey = `  NameTheKey: ${lintFixedDescriptor},\n`;
+  const descriptorsWithKey = `${intendation}NameTheKey: ${lintFixedDescriptor},\n`;
   return descriptorsWithKey;
 };
