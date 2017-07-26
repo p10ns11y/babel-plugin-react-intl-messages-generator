@@ -1,3 +1,5 @@
+import eol from 'eol';
+
 export const defineMessageFormat = (descriptors) =>
 `import { defineMessages } from 'react-intl';
 
@@ -6,7 +8,7 @@ export default defineMessages({\n${descriptors}});
 `;
 
 export const removeDefindeMessageFormat = (fileContent) =>
-  fileContent
+  eol.lf(fileContent)
   .replace(`import { defineMessages } from 'react-intl';\n\n`, '')
   .replace(`export default defineMessages({\n`, '')
   .replace('\n});', '');
