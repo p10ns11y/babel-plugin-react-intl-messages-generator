@@ -7,6 +7,7 @@
 import * as p from 'path';
 import { writeFileSync, existsSync, readFileSync } from 'fs';
 import { sync as mkdirpSync } from 'mkdirp';
+import eol from 'eol';
 
 import {
   createDescriptorsWithKey,
@@ -39,7 +40,7 @@ export default function({ types: t }) { // eslint-disable-line no-unused-vars
 
     const prefixId = p
       .relative(process.cwd(), file.opts.filename)
-      .split('/')
+      .split(p.sep)
       .join('.')
       .replace(/jsx?/, '..');
 
@@ -75,7 +76,7 @@ export default function({ types: t }) { // eslint-disable-line no-unused-vars
             let relativePath = p.join(
               p.sep,
               p.relative(process.cwd(), filename)
-            );
+            ).replace(/\\/g, '/');
 
             let generatedMessagesFilename = p.join(
               opts.messagesDir,
@@ -105,7 +106,7 @@ export default function({ types: t }) { // eslint-disable-line no-unused-vars
                   }
                 }
 
-                descriptorsWithKey += createDescriptorsWithKey(descriptor);
+                descriptorsWithKey += createDescriptorsWithKey(descriptor, opts);
                 return descriptorsWithKey;
               },
               ''
@@ -122,13 +123,13 @@ export default function({ types: t }) { // eslint-disable-line no-unused-vars
                 updatedNamedDescriptors
               );
 
-              writeFileSync(generatedMessagesFilename, updatedDescriptorFile);
+              writeFileSync(generatedMessagesFilename, eol.lf(updatedDescriptorFile));
             }
 
             // new file
             if (!existingContent && namedDesriptors) {
               let generatedDescriptorFile = defineMessageFormat(namedDesriptors);
-              writeFileSync(generatedMessagesFilename, generatedDescriptorFile);
+              writeFileSync(generatedMessagesFilename, eol.lf(generatedDescriptorFile));
             }
             // else keep the file untouched
           }

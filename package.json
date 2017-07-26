@@ -1,17 +1,21 @@
 {
-  "name": "babel-plugin-react-intl-messages-generator",
-  "version": "0.3.0",
-  "description": "Extracts explicit texts from react components and generate a componentNameMessages.js files",
+  "name": "@loopmode/babel-plugin-react-intl-messages-generator",
+  "version": "0.3.2",
+  "description": "Extracts explicit texts from react components and generate a componentNameMessages.js files. Forked from https://github.com/p10ns11y/babel-plugin-react-intl-messages-generator, added Windows compatibility",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/p10ns11y/babel-plugin-react-intl-messages-generator.git"
+    "url": "git+https://github.com/loopmode/babel-plugin-react-intl-messages-generator.git"
   },
   "license": "BSD-3-Clause",
   "main": "lib/index.js",
   "author": "Peramanathan Sathyamoorthy <sathyam.peram@gmail.com>",
+  "contributors": [
+    "Jovica Aleksic <jovica.aleksic@loopmode.de> (https://github.com/loopmode)"
+  ],
   "dependencies": {
     "babel-runtime": "^6.2.0",
-    "mkdirp": "^0.5.1"
+    "mkdirp": "^0.5.1",
+    "eol": "^0.9.0"
   },
   "devDependencies": {
     "babel-cli": "^6.1.18",
@@ -30,7 +34,7 @@
   },
   "scripts": {
     "lint": "eslint src/",
-    "clean": "rimraf lib/",
+    "clean": "rimraf lib/ && rimraf test/fixtures/*/actualMessages.js",
     "test": "cross-env NODE_ENV=test mocha --compilers js:babel-register",
     "build": "babel src/ --out-dir lib/",
     "build:fixtures": "babel-node ./scripts/build-fixtures.js",
@@ -43,7 +47,7 @@
     "defineMessages"
   ],
   "bugs": {
-    "url": "https://github.com/p10ns11y/babel-plugin-react-intl-messages-generator/issues"
+    "url": "https://github.com/loopmode/babel-plugin-react-intl-messages-generator/issues"
   },
-  "homepage": "https://github.com/p10ns11y/babel-plugin-react-intl-messages-generator#readme"
+  "homepage": "https://github.com/loopmode/babel-plugin-react-intl-messages-generator#readme"
 }

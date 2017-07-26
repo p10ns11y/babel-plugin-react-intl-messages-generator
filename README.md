@@ -1,6 +1,10 @@
 # babel-plugin-react-intl-messages-generator
 Build skeleton `messages` files with `defineMessage` format for each component that contains explicit texts
 
+___This is a fork of that fixes some issues on Windows systems.___
+Hopefully the fork will become obsolete after the issues have been fixed or the solutions merged.
+The original project is located at https://github.com/p10ns11y/babel-plugin-react-intl-messages-generator and https://www.npmjs.com/package/babel-plugin-react-intl-messages-generator.
+
 ## Installation
 
 ```sh
@@ -70,6 +74,7 @@ Only new unique `defaultMessage` appended as `descriptor` at the end of previous
 
 - **`messagesDir`**: The target location where the plugin will output a `.js` file corresponding to each component from which messages were extracted. If not provided, the extracted message descriptors will only be accessible via Babel's API.
 
+- **`intendation`**: A string that will be used to intend the generated messages. Defaults to `"    "` (four spaces ).
 
 ### Via CLI
 

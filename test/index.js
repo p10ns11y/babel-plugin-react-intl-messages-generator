@@ -2,12 +2,15 @@ import * as path from 'path';
 import * as fs from 'fs';
 import assert from 'power-assert';
 import * as babel from 'babel-core';
+import eol from 'eol';
 import plugin from '../src/index';
 
 function trim(str) {
   return str.toString().replace(/^\s+|\s+$/, '');
 }
-
+function normalize(str) {
+  return eol.lf(trim(str));
+}
 const skipTests = [
   '.babelrc',
   '.DS_Store',
@@ -37,12 +40,12 @@ describe('emit asserts for: ', () => {
 
       // Check code output
       const expected = fs.readFileSync(path.join(fixtureDir, 'expected.js'));
-      assert.equal(trim(actual), trim(expected));
+      assert.equal(normalize(actual), normalize(expected));
 
       // Check generated message output
       const expectedGenMessages = fs.readFileSync(path.join(fixtureDir, 'expectedMessages.js'));
       const actualGenMessages = fs.readFileSync(path.join(fixtureDir, actualFileName + 'Messages.js'));
-      assert.equal(trim(actualGenMessages), trim(expectedGenMessages));
+      assert.equal(normalize(actualGenMessages), normalize(expectedGenMessages));
     });
   });
 });
