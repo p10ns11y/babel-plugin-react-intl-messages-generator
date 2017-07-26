@@ -74,7 +74,7 @@ Only new unique `defaultMessage` appended as `descriptor` at the end of previous
 
 - **`messagesDir`**: The target location where the plugin will output a `.js` file corresponding to each component from which messages were extracted. If not provided, the extracted message descriptors will only be accessible via Babel's API.
 
-- **`intendation`**: A string that will be used to intend the generated messages. Defaults to `"  "` (two spaces ).
+- **`intendation`**: A string that will be used to intend the generated messages. Defaults to `"    "` (four spaces ).
 
 ### Via CLI
 
