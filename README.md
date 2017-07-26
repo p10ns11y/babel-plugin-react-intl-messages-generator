@@ -1,6 +1,10 @@
 # babel-plugin-react-intl-messages-generator
 Build skeleton `messages` files with `defineMessage` format for each component that contains explicit texts
 
+___This is a fork of that fixes some issues on Windows systems.___
+Hopefully the fork will become obsolete after the issues have been fixed or the solutions merged.
+The original project is located at https://github.com/p10ns11y/babel-plugin-react-intl-messages-generator and https://www.npmjs.com/package/babel-plugin-react-intl-messages-generator.
+
 ## Installation
 
 ```sh
