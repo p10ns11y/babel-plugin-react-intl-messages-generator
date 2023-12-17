@@ -12,7 +12,7 @@ import {
   createDescriptorsWithKey,
   defineMessageFormat,
   removeDefindeMessageFormat,
-} from './utils';
+} from './utils.js';
 
 const EXTRACTED_TAG = Symbol('DescriptorGenerated');
 

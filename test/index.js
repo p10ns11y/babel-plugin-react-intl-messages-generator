@@ -1,8 +1,11 @@
 import * as path from 'path';
+import * as url from 'url';
 import * as fs from 'fs';
 import assert from 'power-assert';
 import * as babel from 'babel-core';
-import plugin from '../src/index';
+import plugin from '../src/index.js';
+
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 function trim(str) {
   return str.toString().replace(/^\s+|\s+$/, '');
